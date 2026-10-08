@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Combat Dojo — Karate Equipment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="wrap">
+      <span>🚚 Nationwide delivery</span>
+      <span>✉ orders@combatdojo.example</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-main wrap">
+      <div class="logo" onclick="navigateTo('home')"><span class="stripe"></span>COMBAT DOJO</div>
+
+      <div class="header-search">
+        <select id="hsCat"></select>
+        <input type="text" id="hsInput" placeholder="Search for gear or brand…" onkeydown="if(event.key==='Enter')headerSearch()">
+        <button onclick="headerSearch()">Search</button>
+      </div>
+
+      <div class="header-actions">
+        <button class="hbtn" onclick="openAuth()">Sign in</button>
+        <button class="hbtn cart-btn" onclick="openCart()">
+          🛒 <span id="cartTotal">$0.00</span>
+          <span class="cart-count" id="cartCount" style="display:none">0</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="mainnav">
+      <div class="wrap nav-row">
+        <a id="nav-home" class="active" onclick="navigateTo('home')">Home</a>
+
+        <div class="dropdown" id="dd-cats">
+          <button class="dd-toggle" onclick="toggleDropdown('dd-cats', event)">Categories ▾</button>
+          <div class="dd-menu dd-mega" id="megaCats"></div>
+        </div>
+
+        <div class="dropdown" id="dd-brands">
+          <button class="dd-toggle" onclick="toggleDropdown('dd-brands', event)">Brands Store ▾</button>
+          <div class="dd-menu" id="brandMenu"></div>
+        </div>
+
+        <a id="nav-finder" onclick="navigateTo('finder')">Sizing Finder</a>
+        <a id="nav-shipping" onclick="navigateTo('shipping')">Shipping &amp; Returns</a>
+        <a id="nav-contact" onclick="navigateTo('contact')">Contact Us</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- SITE-WIDE BANNER (shows on every page) -->
+  <section class="site-banner">
+    <div class="wrap banner-inner">
+      <div>
+        <div class="banner-kicker">WKF-approved equipment</div>
+        <div class="banner-title">Train hard. Fight smart.</div>
+      </div>
+      <button class="btn-primary" onclick="showShop()">Shop now</button>
+    </div>
+  </section>
+
+  <!-- HOME -->
+  <main id="page-home" class="page-view active">
+    <div class="wrap">
+      <section class="hero" id="heroSlides"></section>
+      <div class="hero-dots" id="heroDots"></div>
+
+      <h2 class="section-title">Shop by brand</h2>
+      <div class="brand-strip" id="brandStrip"></div>
+
+      <div class="section-bar">
+        <h2 class="section-title">Featured products</h2>
+        <div class="row-arrows">
+          <button onclick="scrollRow('featuredRow',-1)" aria-label="Previous">‹</button>
+          <button onclick="scrollRow('featuredRow',1)" aria-label="Next">›</button>
+        </div>
+      </div>
+      <div class="row-scroll" id="featuredRow"></div>
+
+      <h2 class="section-title">Shop by category</h2>
+      <div class="cat-tiles" id="catTiles"></div>
+
+      <h2 class="section-title">New arrivals</h2>
+      <div class="grid" id="newGrid"></div>
+
+      <div class="center-btn">
+        <button class="btn-primary" onclick="showShop()">Explore all products</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- SHOP -->
+  <main id="page-shop" class="page-view">
+    <div class="wrap">
+      <div class="crumbs"><a onclick="navigateTo('home')">Home</a> / <span>Shop</span></div>
+      <h1 class="page-title" id="shopTitle">All products</h1>
+
+      <div class="filter-bar">
+        <select id="shopCat" onchange="onShopCat(this.value)"></select>
+        <select id="shopBrand" onchange="onShopBrand(this.value)"></select>
+        <select id="shopSort" onchange="onShopSort(this.value)">
+          <option value="default">Default sorting</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+          <option value="name">Name A–Z</option>
+        </select>
+        <span class="result-count" id="resultCount"></span>
+      </div>
+
+      <div class="grid" id="shopGrid"></div>
+    </div>
+  </main>
+
+  <!-- SIZING FINDER -->
+  <main id="page-finder" class="page-view">
+    <div class="tool-box">
+      <h2 style="margin-top:0;">Gi &amp; Belt Sizing Calculator</h2>
+      <p class="muted">Find your gi size based on height and discipline.</p>
+      <div class="form-group">
+        <label>Height (in cm)</label>
+        <input type="number" id="userHeight" placeholder="e.g. 175">
+      </div>
+      <div class="form-group">
+        <label>Discipline</label>
+        <select id="userDiscipline">
+          <option value="kumite">Kumite (Lightweight &amp; Loose)</option>
+          <option value="kata">Kata (Heavyweight Canvas)</option>
+        </select>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="calculateSize()">Calculate Sizing</button>
+      <div class="result-card" id="sizingResult"></div>
+    </div>
+  </main>
+
+  <!-- SHIPPING & RETURNS -->
+  <main id="page-shipping" class="page-view">
+    <div class="info-content">
+      <h1 class="page-title">Shipping &amp; Returns</h1>
+      <h3>Delivery</h3>
+      <p>Placeholder text: describe delivery areas, courier partners, delivery times and shipping fees here.</p>
+      <h3>Returns</h3>
+      <p>Placeholder text: describe your return window, item condition rules and how customers start a return.</p>
+    </div>
+  </main>
+
+  <!-- CONTACT -->
+  <main id="page-contact" class="page-view">
+    <div class="tool-box">
+      <h1 class="page-title" style="margin-top:0;">Contact us</h1>
+      <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Message</label><textarea rows="4" placeholder="How can we help?"></textarea></div>
+      <button class="btn-primary" style="width:100%" onclick="alert('Contact form will be wired up in a later phase.')">Send message</button>
+    </div>
+  </main>
+
+  <!-- TRUST BADGES -->
+  <section class="trust">
+    <div class="wrap trust-grid">
+      <div><span>🚚</span>Nationwide delivery</div>
+      <div><span>⭐</span>Excellent service</div>
+      <div><span>🏷️</span>Best offers</div>
+      <div><span>🔒</span>Secure payment</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <div class="logo" style="color:#fff"><span class="stripe"></span>COMBAT DOJO</div>
+        <p class="footer-note">Karate equipment for kumite, kata and everyday training.</p>
+        <p class="footer-note">orders@combatdojo.example</p>
+      </div>
+      <div>
+        <h4>Quick links</h4>
+        <a onclick="navigateTo('home')">Home</a>
+        <a onclick="showShop()">Shop</a>
+        <a onclick="openCart()">Cart</a>
+        <a onclick="openAuth()">My account</a>
+      </div>
+      <div>
+        <h4>Brands</h4>
+        <div id="footerBrands"></div>
+      </div>
+    </div>
+    <div class="copyright">© 2026 Combat Dojo — UI prototype. No real payments or accounts yet.</div>
+  </footer>
+
+  <!-- PRODUCT MODAL -->
+  <div class="overlay" id="pdOverlay">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('pdOverlay')">&times;</button>
+      <div class="pd-body">
+        <div class="pd-img" id="pdImg"></div>
+        <div class="pd-info">
+          <div class="card-cat" id="pdCat"></div>
+          <h3 id="pdName"></h3>
+          <div class="pd-brand" id="pdBrand"></div>
+          <div class="pd-stars">★★★★★ <span class="muted">(0 reviews yet)</span></div>
+          <div class="pd-price" id="pdPrice"></div>
+
+          <div class="pd-label">Size</div>
+          <div class="pd-sizes" id="pdSizes"></div>
+
+          <div class="pd-label">Quantity</div>
+          <div class="qty-row">
+            <button class="qty-btn" onclick="changeQty(-1)">–</button>
+            <span id="pdQty">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+
+          <p class="pd-desc" id="pdDesc"></p>
+          <button class="btn-primary" style="width:100%" onclick="addCurrentToCart()">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="overlay" id="authOverlay">
+    <div class="modal" style="max-width:400px;">
+      <button class="modal-close" onclick="closeModal('authOverlay')">&times;</button>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log in</div>
+        <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign up</div>
+      </div>
+
+      <div class="auth-form" id="loginForm">
+        <div class="field" id="loginEmailField">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com">
+          <div class="error-msg">Enter a valid email address.</div>
+        </div>
+        <div class="field" id="loginPassField">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••">
+          <div class="error-msg">Password must be at least 6 characters.</div>
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="mockAuth('login')">Log in</button>
+        <p class="auth-note">Accounts aren't wired up yet — validation only.</p>
+      </div>
+
+      <div class="auth-form" id="signupForm" style="display:none">
+        <div class="field" id="signupNameField">
+          <label>Name</label>
+          <input type="text" id="signupName" placeholder="Your name">
+          <div class="error-msg">Enter your name.</div>
+        </div>
+        <div class="field" id="signupEmailField">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com">
+          <div class="error-msg">Enter a valid email address.</div>
+        </div>
+        <div class="field" id="signupPassField">
+          <label>Password</label>
+          <input type="password" id="signupPass" placeholder="••••••••">
+          <div class="error-msg">Password must be at least 6 characters.</div>
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="mockAuth('signup')">Create account</button>
+        <p class="auth-note">Accounts aren't wired up yet — validation only.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="overlay" id="cartOverlay" onclick="if(event.target===this)closeModal('cartOverlay')">
+    <div class="drawer" id="cartDrawer" onclick="event.stopPropagation()">
+      <div class="drawer-head">
+        <h3 style="margin:0; font-size:18px;">Your cart</h3>
+        <button class="modal-close" style="position:static" onclick="closeModal('cartOverlay')">&times;</button>
+      </div>
+      <div class="drawer-items" id="drawerItems"></div>
+      <div class="drawer-foot">
+        <div class="subtotal-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+        <button class="btn-primary" style="width:100%" onclick="alert('Checkout will be wired up in a later phase.')">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
